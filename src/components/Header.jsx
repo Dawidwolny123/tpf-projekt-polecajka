@@ -1,8 +1,8 @@
+import { NavLink } from "react-router-dom";
+
 function Header({
-  currentView,
   isLoggedIn,
   isDarkMode,
-  onNavigate,
   onOpenLogin,
   onLogout,
   onToggleTheme,
@@ -12,33 +12,43 @@ function Header({
       <div className="header-logo">Polecajka Filmów</div>
 
       <nav className="header-nav" aria-label="Główna nawigacja">
-        <button
-          className={currentView === "recommendation" ? "active" : ""}
-          onClick={() => onNavigate("recommendation")}
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive ? "nav-button active" : "nav-button"
+          }
         >
           Polecanie
-        </button>
+        </NavLink>
 
-        <button
-          className={currentView === "database" ? "active" : ""}
-          onClick={() => onNavigate("database")}
+        <NavLink
+          to="/database"
+          className={({ isActive }) =>
+            isActive ? "nav-button active" : "nav-button"
+          }
         >
           Baza
-        </button>
+        </NavLink>
 
-        <button
-          className={currentView === "profile" ? "active" : ""}
-          onClick={() => onNavigate("profile")}
+        <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            isActive ? "nav-button active" : "nav-button"
+          }
         >
           Profil
-        </button>
+        </NavLink>
 
-        <button
-          className={currentView === "admin" ? "active" : ""}
-          onClick={() => onNavigate("admin")}
-        >
-          Admin
-        </button>
+        {isLoggedIn && (
+          <NavLink
+            to="/admin"
+            className={({ isActive }) =>
+              isActive ? "nav-button active" : "nav-button"
+            }
+          >
+            Admin
+          </NavLink>
+        )}
       </nav>
 
       <div className="header-actions">

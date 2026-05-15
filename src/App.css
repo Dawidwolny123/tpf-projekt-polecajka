@@ -99,7 +99,24 @@ button {
 button:hover {
   opacity: 0.85;
 }
+.nav-button {
+  display: inline-block;
+  border: 1px solid var(--border);
+  background: var(--button-bg);
+  color: var(--button-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
 
+.nav-button:hover {
+  opacity: 0.85;
+}
+
+.nav-button.active {
+  font-weight: 700;
+  border-color: currentColor;
+}
 button.active,
 .genre-button.active {
   font-weight: 700;
