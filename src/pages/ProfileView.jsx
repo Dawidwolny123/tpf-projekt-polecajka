@@ -49,7 +49,7 @@ function ProfileView({
         items={favorites}
         emptyMessage="Nie masz jeszcze ulubionych tytułów. Przejdź do bazy i dodaj pierwszy tytuł."
         actionLabel="Przejdź do bazy"
-        onAction={() => onNavigate("database")}
+        onAction={() => onNavigate("/database")}
       />
 
       <ProfileSection
@@ -57,7 +57,7 @@ function ProfileView({
         items={savedRecommendations}
         emptyMessage="Nie masz jeszcze zapisanych rekomendacji. Oceń kilka tytułów i zapisz wynik."
         actionLabel="Przejdź do polecania"
-        onAction={() => onNavigate("recommendation")}
+        onAction={() => onNavigate("/")}
       />
 
       <div className="profile-columns">
