@@ -1,60 +1,108 @@
+import { useState } from "react";
+
 function Sidebar({
-  contentType,
-  searchValue,
-  activeGenre,
-  genres,
-  onContentTypeChange,
-  onSearchChange,
-  onGenreChange,
-  onClearFilters,
-}) {
-  return (
-    <aside className="sidebar">
-      <h2>Baza tytułów</h2>
+                     contentType,
+                     searchValue,
+                     activeGenre,
+                     genres,
+                     onContentTypeChange,
+                     onSearchChange,
+                     onGenreChange,
+                     onClearFilters,
+                 }) {
+    const [isTypeOpen, setIsTypeOpen] = useState(false);
 
-      <label className="form-field">
-        Typ treści
-        <select
-          value={contentType}
-          onChange={(event) => onContentTypeChange(event.target.value)}
-        >
-          <option value="movies">Filmy</option>
-          <option value="series">Seriale</option>
-          <option value="all">Wszystko</option>
-        </select>
-      </label>
+    const typeOptions = [
+        { value: "movies", label: "Filmy" },
+        { value: "series", label: "Seriale" },
+        { value: "all", label: "Wszystko" },
+    ];
 
-      <label className="form-field">
-        Szukaj po tytule
-        <input
-          type="text"
-          placeholder="Np. Miasto cieni"
-          value={searchValue}
-          onChange={(event) => onSearchChange(event.target.value)}
-        />
-      </label>
+    const activeTypeLabel =
+        typeOptions.find((option) => option.value === contentType)?.label || "Filmy";
 
-      <div className="genre-list">
-        <h3>Gatunki</h3>
+    function handleTypeChange(value) {
+        onContentTypeChange(value);
+        setIsTypeOpen(false);
+    }
 
-        {genres.map((genre) => (
-          <button
-            key={genre}
-            className={
-              activeGenre === genre ? "genre-button active" : "genre-button"
-            }
-            onClick={() => onGenreChange(genre)}
-          >
-            {genre}
-          </button>
-        ))}
-      </div>
+    return (
+        <aside className="sidebar glass-card">
+            <div className="sidebar-heading">
+                <span className="material-symbols-outlined">tune</span>
+                <div>
+                    <h2>Baza tytułów</h2>
+                    <p>Filtruj katalog filmów i seriali.</p>
+                </div>
+            </div>
 
-      <button className="button-secondary full-width" onClick={onClearFilters}>
-        Wyczyść filtry
-      </button>
-    </aside>
-  );
+            <div className="form-field">
+                <span>Typ treści</span>
+
+                <div className="custom-select">
+                    <button
+                        type="button"
+                        className={isTypeOpen ? "custom-select-button open" : "custom-select-button"}
+                        onClick={() => setIsTypeOpen((currentValue) => !currentValue)}
+                    >
+                        <span>{activeTypeLabel}</span>
+                        <span className="material-symbols-outlined">expand_more</span>
+                    </button>
+
+                    {isTypeOpen && (
+                        <div className="custom-select-menu">
+                            {typeOptions.map((option) => (
+                                <button
+                                    type="button"
+                                    key={option.value}
+                                    className={
+                                        option.value === contentType
+                                            ? "custom-select-option active"
+                                            : "custom-select-option"
+                                    }
+                                    onClick={() => handleTypeChange(option.value)}
+                                >
+                                    {option.label}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <label className="form-field search-field">
+                <span>Szukaj po tytule</span>
+                <div className="input-with-icon">
+                    <span className="material-symbols-outlined">search</span>
+                    <input
+                        type="text"
+                        placeholder="Np. Miasto cieni"
+                        value={searchValue}
+                        onChange={(event) => onSearchChange(event.target.value)}
+                    />
+                </div>
+            </label>
+
+            <div className="genre-list custom-scrollbar">
+                <h3>Gatunki</h3>
+                <div className="genre-buttons">
+                    {genres.map((genre) => (
+                        <button
+                            key={genre}
+                            className={activeGenre === genre ? "genre-button active" : "genre-button"}
+                            onClick={() => onGenreChange(genre)}
+                        >
+                            {genre}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <button className="button-secondary full-width" onClick={onClearFilters}>
+                Wyczyść filtry
+            </button>
+        </aside>
+    );
 }
 
 export default Sidebar;
