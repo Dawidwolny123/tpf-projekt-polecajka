@@ -1,72 +1,54 @@
 import { NavLink } from "react-router-dom";
 
 function Header({
-  isLoggedIn,
-  isDarkMode,
-  onOpenLogin,
-  onLogout,
-  onToggleTheme,
-}) {
+                  isLoggedIn,
+                  isDarkMode,
+                  onOpenLogin,
+                  onLogout,
+                  onToggleTheme,
+                }) {
   return (
-    <header className="header">
-      <div className="header-logo">Polecajka Filmów</div>
-
-      <nav className="header-nav" aria-label="Główna nawigacja">
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            isActive ? "nav-button active" : "nav-button"
-          }
-        >
-          Polecanie
-        </NavLink>
-
-        <NavLink
-          to="/database"
-          className={({ isActive }) =>
-            isActive ? "nav-button active" : "nav-button"
-          }
-        >
-          Baza
-        </NavLink>
-
-        <NavLink
-          to="/profile"
-          className={({ isActive }) =>
-            isActive ? "nav-button active" : "nav-button"
-          }
-        >
-          Profil
-        </NavLink>
-
-        {isLoggedIn && (
-          <NavLink
-            to="/admin"
-            className={({ isActive }) =>
-              isActive ? "nav-button active" : "nav-button"
-            }
-          >
-            Admin
+      <header className="header">
+        <div className="header-brand">
+          <span className="material-symbols-outlined header-menu">menu</span>
+          <NavLink to="/" className="header-logo">
+            Polecajka Filmów
           </NavLink>
-        )}
-      </nav>
+        </div>
 
-      <div className="header-actions">
-        <button onClick={onToggleTheme}>
-          {isDarkMode ? "Tryb jasny" : "Tryb ciemny"}
-        </button>
+        <nav className="header-nav" aria-label="Główna nawigacja">
+          <NavLink to="/" className={({ isActive }) => isActive ? "nav-button active" : "nav-button"}>
+            <span className="material-symbols-outlined">movie_filter</span>
+            Polecanie
+          </NavLink>
+          <NavLink to="/database" className={({ isActive }) => isActive ? "nav-button active" : "nav-button"}>
+            <span className="material-symbols-outlined">database</span>
+            Baza
+          </NavLink>
+          <NavLink to="/profile" className={({ isActive }) => isActive ? "nav-button active" : "nav-button"}>
+            <span className="material-symbols-outlined">person</span>
+            Profil
+          </NavLink>
+          {isLoggedIn && (
+              <NavLink to="/admin" className={({ isActive }) => isActive ? "nav-button active" : "nav-button"}>
+                <span className="material-symbols-outlined">admin_panel_settings</span>
+                Admin
+              </NavLink>
+          )}
+        </nav>
 
-        {isLoggedIn ? (
-          <button className="button-secondary" onClick={onLogout}>
-            Wyloguj
+        <div className="header-actions">
+          <button className="icon-button" onClick={onToggleTheme} aria-label="Zmień motyw">
+            <span className="material-symbols-outlined">{isDarkMode ? "light_mode" : "dark_mode"}</span>
           </button>
-        ) : (
-          <button className="button-primary" onClick={onOpenLogin}>
-            Zaloguj się
-          </button>
-        )}
-      </div>
-    </header>
+          {isLoggedIn ? (
+              <button className="button-secondary" onClick={onLogout}>Wyloguj</button>
+          ) : (
+              <button className="button-primary" onClick={onOpenLogin}>Zaloguj się</button>
+          )}
+          <div className="avatar" aria-hidden="true">PF</div>
+        </div>
+      </header>
   );
 }
 
