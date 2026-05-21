@@ -29,11 +29,7 @@ function Sidebar({
     return (
         <aside className="sidebar glass-card">
             <div className="sidebar-heading">
-                <span className="material-symbols-outlined">tune</span>
-                <div>
-                    <h2>Baza tytułów</h2>
-                    <p>Filtruj katalog filmów i seriali.</p>
-                </div>
+                <h2>Baza tytułów</h2>
             </div>
 
             <div className="form-field">
@@ -83,7 +79,7 @@ function Sidebar({
                 </div>
             </label>
 
-            <div className="genre-list custom-scrollbar">
+            <div className="genre-list">
                 <h3>Gatunki</h3>
                 <div className="genre-buttons">
                     {genres.map((genre) => (

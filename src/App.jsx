@@ -11,8 +11,6 @@ import "./App.css";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import RightPanel from "./components/RightPanel";
-import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
 import ConfirmModal from "./components/ConfirmModal";
 import Toast from "./components/Toast";
@@ -37,8 +35,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
   const [contentType, setContentType] = useState("movies");
   const [searchValue, setSearchValue] = useState("");
   const [activeGenre, setActiveGenre] = useState("Wszystkie");
@@ -61,21 +57,19 @@ function App() {
   const totalRequiredRatings = 10;
   const currentRecommendation = titles[recommendationIndex % titles.length];
 
-  const currentView = getCurrentViewFromPath(location.pathname);
-
   const filteredTitles = useMemo(() => {
     return titles.filter((title) => {
       const matchesType =
-        contentType === "all" ||
-        (contentType === "movies" && title.type === "movie") ||
-        (contentType === "series" && title.type === "series");
+          contentType === "all" ||
+          (contentType === "movies" && title.type === "movie") ||
+          (contentType === "series" && title.type === "series");
 
       const matchesSearch = title.title
-        .toLowerCase()
-        .includes(searchValue.toLowerCase().trim());
+          .toLowerCase()
+          .includes(searchValue.toLowerCase().trim());
 
       const matchesGenre =
-        activeGenre === "Wszystkie" || title.genre === activeGenre;
+          activeGenre === "Wszystkie" || title.genre === activeGenre;
 
       return matchesType && matchesSearch && matchesGenre;
     });
@@ -84,8 +78,8 @@ function App() {
   const mainRecommendation = likedTitles[0] || titles[0];
 
   const similarTitles = titles
-    .filter((title) => title.id !== mainRecommendation?.id)
-    .slice(0, 3);
+      .filter((title) => title.id !== mainRecommendation?.id)
+      .slice(0, 3);
 
   function showToast(message) {
     setToastMessage(message);
@@ -169,11 +163,11 @@ function App() {
 
     if (lastRating.type === "like") {
       setLikedTitles((prev) =>
-        prev.filter((title) => title.id !== lastRating.title.id),
+          prev.filter((title) => title.id !== lastRating.title.id),
       );
     } else {
       setDislikedTitles((prev) =>
-        prev.filter((title) => title.id !== lastRating.title.id),
+          prev.filter((title) => title.id !== lastRating.title.id),
       );
     }
 
@@ -277,222 +271,222 @@ function App() {
     });
   }
 
+  function goToDatabase() {
+    if (!location.pathname.startsWith("/database")) {
+      navigate("/database");
+    }
+  }
+
+  function handleContentTypeChange(value) {
+    setContentType(value);
+    goToDatabase();
+  }
+
+  function handleSearchChange(value) {
+    setSearchValue(value);
+    goToDatabase();
+  }
+
+  function handleGenreChange(genre) {
+    setActiveGenre(genre);
+    goToDatabase();
+  }
+
   function handleClearFilters() {
     setContentType("all");
     setSearchValue("");
     setActiveGenre("Wszystkie");
+    goToDatabase();
     showToast("Wyczyszczono filtry.");
   }
 
   return (
-    <div className={isDarkMode ? "app dark" : "app light"}>
-      <Header
-        isLoggedIn={isLoggedIn}
-        isDarkMode={isDarkMode}
-        onOpenLogin={() => setIsLoginModalOpen(true)}
-        onLogout={handleLogout}
-        onToggleTheme={() => setIsDarkMode((prev) => !prev)}
-      />
-
-      <div className="app-layout">
-        <Sidebar
-          contentType={contentType}
-          searchValue={searchValue}
-          activeGenre={activeGenre}
-          genres={genres}
-          onContentTypeChange={setContentType}
-          onSearchChange={setSearchValue}
-          onGenreChange={setActiveGenre}
-          onClearFilters={handleClearFilters}
+      <div className="app">
+        <Header
+            isLoggedIn={isLoggedIn}
+            onOpenLogin={() => setIsLoginModalOpen(true)}
+            onLogout={handleLogout}
         />
 
-        <main className="main-content">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <RecommendationView
-                  title={currentRecommendation}
-                  ratingCount={ratingCount}
-                  totalRequiredRatings={totalRequiredRatings}
-                  onLike={() => handleRateTitle("like")}
-                  onDislike={() => handleRateTitle("dislike")}
-                  onUndoLastRating={handleUndoLastRating}
-                  onResetRatings={handleResetRatings}
-                  onShowDetails={() => handleShowDetails(currentRecommendation)}
-                />
-              }
-            />
+        <div className="app-layout">
+          <Sidebar
+              contentType={contentType}
+              searchValue={searchValue}
+              activeGenre={activeGenre}
+              genres={genres}
+              onContentTypeChange={handleContentTypeChange}
+              onSearchChange={handleSearchChange}
+              onGenreChange={handleGenreChange}
+              onClearFilters={handleClearFilters}
+          />
 
-            <Route
-              path="/database"
-              element={
-                <DatabaseView
-                  titles={filteredTitles}
-                  totalTitlesCount={titles.length}
-                  contentType={contentType}
-                  searchValue={searchValue}
-                  activeGenre={activeGenre}
-                  onShowDetails={handleShowDetails}
-                  onClearFilters={handleClearFilters}
-                />
-              }
-            />
+          <main className="main-content">
+            <Routes>
+              <Route
+                  path="/"
+                  element={
+                    <RecommendationView
+                        title={currentRecommendation}
+                        ratingCount={ratingCount}
+                        totalRequiredRatings={totalRequiredRatings}
+                        onLike={() => handleRateTitle("like")}
+                        onDislike={() => handleRateTitle("dislike")}
+                        onUndoLastRating={handleUndoLastRating}
+                        onResetRatings={handleResetRatings}
+                        onShowDetails={() => handleShowDetails(currentRecommendation)}
+                    />
+                  }
+              />
 
-            <Route
-              path="/details/:id"
-              element={
-                <DetailsRoute
-                  titles={titles}
-                  favorites={favorites}
-                  likedTitles={likedTitles}
-                  dislikedTitles={dislikedTitles}
-                  onAddToFavorites={handleAddToFavorites}
-                  onBack={handleBackFromDetails}
-                  onBackToDatabase={() => navigate("/database")}
-                  onBackToRecommendation={() => navigate("/")}
-                />
-              }
-            />
+              <Route
+                  path="/database"
+                  element={
+                    <DatabaseView
+                        titles={filteredTitles}
+                        totalTitlesCount={titles.length}
+                        contentType={contentType}
+                        searchValue={searchValue}
+                        activeGenre={activeGenre}
+                        onShowDetails={handleShowDetails}
+                        onClearFilters={handleClearFilters}
+                    />
+                  }
+              />
 
-            <Route
-              path="/result"
-              element={
-                <ResultView
-                  recommendation={mainRecommendation}
-                  similarTitles={similarTitles}
-                  isSaved={savedRecommendations.some(
-                    (item) => item.id === mainRecommendation?.id,
-                  )}
-                  onShowDetails={handleShowDetails}
-                  onDrawAgain={handleDrawAgain}
-                  onSaveRecommendation={handleSaveRecommendation}
-                  onResetRatings={handleResetRatings}
-                />
-              }
-            />
+              <Route
+                  path="/details/:id"
+                  element={
+                    <DetailsRoute
+                        titles={titles}
+                        favorites={favorites}
+                        likedTitles={likedTitles}
+                        dislikedTitles={dislikedTitles}
+                        onAddToFavorites={handleAddToFavorites}
+                        onBack={handleBackFromDetails}
+                        onBackToDatabase={() => navigate("/database")}
+                        onBackToRecommendation={() => navigate("/")}
+                    />
+                  }
+              />
 
-            <Route
-              path="/profile"
-              element={
-                <ProfileView
-                  isLoggedIn={isLoggedIn}
-                  favorites={favorites}
-                  savedRecommendations={savedRecommendations}
-                  likedTitles={likedTitles}
-                  dislikedTitles={dislikedTitles}
-                  onOpenLogin={() => setIsLoginModalOpen(true)}
-                  onNavigate={navigate}
-                />
-              }
-            />
+              <Route
+                  path="/result"
+                  element={
+                    <ResultView
+                        recommendation={mainRecommendation}
+                        similarTitles={similarTitles}
+                        isSaved={savedRecommendations.some(
+                            (item) => item.id === mainRecommendation?.id,
+                        )}
+                        onShowDetails={handleShowDetails}
+                        onDrawAgain={handleDrawAgain}
+                        onSaveRecommendation={handleSaveRecommendation}
+                        onResetRatings={handleResetRatings}
+                    />
+                  }
+              />
 
-            <Route
-              path="/admin"
-              element={
-                isLoggedIn ? (
-                  <AdminView
-                    titles={titles}
-                    onDeleteTitle={askDeleteTitle}
-                    onShowDetails={handleShowDetails}
-                    onMockSave={() =>
-                      showToast(
-                        "Formularz jest mockowy. Dane nie zostały zapisane.",
-                      )
-                    }
-                  />
-                ) : (
-                  <Navigate to="/profile" replace />
-                )
-              }
-            />
+              <Route
+                  path="/profile"
+                  element={
+                    <ProfileView
+                        isLoggedIn={isLoggedIn}
+                        favorites={favorites}
+                        savedRecommendations={savedRecommendations}
+                        likedTitles={likedTitles}
+                        dislikedTitles={dislikedTitles}
+                        onOpenLogin={() => setIsLoginModalOpen(true)}
+                        onNavigate={navigate}
+                    />
+                  }
+              />
 
-            <Route
-              path="*"
-              element={
-                <EmptyState
-                  title="Nie znaleziono strony"
-                  description="Taki adres nie istnieje w aplikacji."
-                  actionLabel="Wróć do polecania"
-                  onAction={() => navigate("/")}
-                />
-              }
-            />
-          </Routes>
-        </main>
+              <Route
+                  path="/admin"
+                  element={
+                    isLoggedIn ? (
+                        <AdminView
+                            titles={titles}
+                            onDeleteTitle={askDeleteTitle}
+                            onShowDetails={handleShowDetails}
+                            onMockSave={() =>
+                                showToast(
+                                    "Formularz jest mockowy. Dane nie zostały zapisane.",
+                                )
+                            }
+                        />
+                    ) : (
+                        <Navigate to="/profile" replace />
+                    )
+                  }
+              />
 
-        <RightPanel
-          currentView={currentView}
-          isLoggedIn={isLoggedIn}
-          favoritesCount={favorites.length}
-          savedCount={savedRecommendations.length}
-          ratingCount={ratingCount}
-          totalRequiredRatings={totalRequiredRatings}
-        />
+              <Route
+                  path="*"
+                  element={
+                    <EmptyState
+                        title="Nie znaleziono strony"
+                        description="Taki adres nie istnieje w aplikacji."
+                        actionLabel="Wróć do polecania"
+                        onAction={() => navigate("/")}
+                    />
+                  }
+              />
+            </Routes>
+          </main>
+        </div>
+
+        {toastMessage && <Toast message={toastMessage} />}
+
+        {isLoginModalOpen && (
+            <LoginModal
+                onClose={() => {
+                  setIsLoginModalOpen(false);
+                  setPendingAction(null);
+                }}
+                onLogin={handleLogin}
+            />
+        )}
+
+        {confirmModal && (
+            <ConfirmModal
+                title={confirmModal.title}
+                message={confirmModal.message}
+                confirmLabel={confirmModal.confirmLabel}
+                cancelLabel={confirmModal.cancelLabel}
+                onConfirm={confirmModal.onConfirm}
+                onCancel={() => setConfirmModal(null)}
+            />
+        )}
       </div>
-
-      <Footer />
-
-      {toastMessage && <Toast message={toastMessage} />}
-
-      {isLoginModalOpen && (
-        <LoginModal
-          onClose={() => {
-            setIsLoginModalOpen(false);
-            setPendingAction(null);
-          }}
-          onLogin={handleLogin}
-        />
-      )}
-
-      {confirmModal && (
-        <ConfirmModal
-          title={confirmModal.title}
-          message={confirmModal.message}
-          confirmLabel={confirmModal.confirmLabel}
-          cancelLabel={confirmModal.cancelLabel}
-          onConfirm={confirmModal.onConfirm}
-          onCancel={() => setConfirmModal(null)}
-        />
-      )}
-    </div>
   );
 }
 
 function DetailsRoute({
-  titles,
-  favorites,
-  likedTitles,
-  dislikedTitles,
-  onAddToFavorites,
-  onBack,
-  onBackToDatabase,
-  onBackToRecommendation,
-}) {
+                        titles,
+                        favorites,
+                        likedTitles,
+                        dislikedTitles,
+                        onAddToFavorites,
+                        onBack,
+                        onBackToDatabase,
+                        onBackToRecommendation,
+                      }) {
   const { id } = useParams();
   const title = titles.find((item) => item.id === Number(id));
 
   return (
-    <DetailsView
-      title={title}
-      isFavorite={favorites.some((item) => item.id === title?.id)}
-      wasLiked={likedTitles.some((item) => item.id === title?.id)}
-      wasDisliked={dislikedTitles.some((item) => item.id === title?.id)}
-      onAddToFavorites={onAddToFavorites}
-      onBack={onBack}
-      onBackToDatabase={onBackToDatabase}
-      onBackToRecommendation={onBackToRecommendation}
-    />
+      <DetailsView
+          title={title}
+          isFavorite={favorites.some((item) => item.id === title?.id)}
+          wasLiked={likedTitles.some((item) => item.id === title?.id)}
+          wasDisliked={dislikedTitles.some((item) => item.id === title?.id)}
+          onAddToFavorites={onAddToFavorites}
+          onBack={onBack}
+          onBackToDatabase={onBackToDatabase}
+          onBackToRecommendation={onBackToRecommendation}
+      />
   );
-}
-
-function getCurrentViewFromPath(pathname) {
-  if (pathname.startsWith("/database")) return "database";
-  if (pathname.startsWith("/details")) return "details";
-  if (pathname.startsWith("/result")) return "result";
-  if (pathname.startsWith("/profile")) return "profile";
-  if (pathname.startsWith("/admin")) return "admin";
-  return "recommendation";
 }
 
 export default App;
