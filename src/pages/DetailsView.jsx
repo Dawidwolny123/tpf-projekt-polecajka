@@ -1,6 +1,5 @@
 import EmptyState from "../components/EmptyState";
 import PosterPlaceholder from "../components/PosterPlaceholder";
-import TitleMetaGrid from "../components/TitleMetaGrid";
 import { getTypeLabel } from "../utils/titleUtils";
 
 function DetailsView({
@@ -9,7 +8,6 @@ function DetailsView({
                          wasLiked,
                          wasDisliked,
                          onAddToFavorites,
-                         onBack,
                          onBackToDatabase,
                          onBackToRecommendation,
                      }) {
@@ -35,17 +33,17 @@ function DetailsView({
             </div>
 
             <div className="details-content">
-                <button className="button-secondary" onClick={onBack}>
-                    Wróć
-                </button>
-
                 <div className="details-heading">
-                    <span className="details-type">{getTypeLabel(title.type)}</span>
                     <h1>{title.polishTitle || title.title}</h1>
                     {title.polishTitle && <p className="details-original-title">{title.title}</p>}
                 </div>
 
-                <TitleMetaGrid title={title} />
+                <div className="details-meta-line">
+                    <span>Rok {title.year}</span>
+                    <span>Czas trwania {title.duration}</span>
+                    <span>Ocena ★ {title.rating}</span>
+                    <span>Wiek {title.ageRating}</span>
+                </div>
 
                 <div className="meta-row">
                     <span className="tag">{getTypeLabel(title.type)}</span>
