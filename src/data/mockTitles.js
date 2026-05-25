@@ -1,4 +1,6 @@
-export const initialMockTitles = [
+const baseUrl = import.meta.env.BASE_URL;
+
+const rawTitles = [
   {
     id: 1,
     type: "movie",
@@ -405,3 +407,14 @@ export const initialMockTitles = [
     tags: ["Animacja", "Sci-fi", "Robot"],
   },
 ];
+
+export const initialMockTitles = rawTitles.map((title) => {
+  if (!title.poster || !title.poster.startsWith("/")) {
+    return title;
+  }
+
+  return {
+    ...title,
+    poster: `${baseUrl}${title.poster.slice(1)}`,
+  };
+});
